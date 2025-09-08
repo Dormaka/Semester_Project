@@ -1,1 +1,33 @@
 # Semester_Project
+CREATE DATABASE IF NOT EXISTS student_planner
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
+USE student_planner;
+
+-- users table (secure password storage, unique student number)
+CREATE TABLE IF NOT EXISTS users (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  student_no VARCHAR(50) NOT NULL UNIQUE,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  email VARCHAR(255) DEFAULT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- course info table (references users.id)
+CREATE TABLE IF NOT EXISTS courseinfo (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED NOT NULL,
+  course_name VARCHAR(150) NOT NULL,
+  course_code VARCHAR(50) DEFAULT NULL,
+  credits TINYINT UNSIGNED DEFAULT NULL,
+  weeks TINYINT UNSIGNED DEFAULT NULL,
+  start_date DATE DEFAULT NULL,
+  class_hours VARCHAR(100) DEFAULT NULL,
+  self_study VARCHAR(100) DEFAULT NULL,
+  hours_studied DECIMAL(6,2) DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_course_user FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
